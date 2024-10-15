@@ -8,9 +8,9 @@
    - [Issued Status Table](#issued-status-table)
    - [Return Status Table](#return-status-table)
 3. [Sample Data Insertion](#sample-data-insertion)
-   - [Members Data](#members-data)
    - [Branch Data](#branch-data)
    - [Employees Data](#employees-data)
+   - [Members Data](#members-data)
    - [Books Data](#books-data)
    - [Issued Status Data](#issued-status-data)
    - [Return Status Data](#return-status-data)
@@ -176,7 +176,7 @@ SELECT * FROM return_status;
 The database design ensures efficient management of books and tracking of issues and returns, facilitating seamless library operations.
 
 ### Sample Data Insertion
-### Branch Table
+### Branch Data
 ```sql
 -- Insert values into branch table
 INSERT INTO branch(branch_id, manager_id, branch_address, contact_no) 
@@ -189,7 +189,7 @@ VALUES
 SELECT * FROM branch;
 ```
 
-### Employees Table
+### Employees Data
 ```sql
 -- Insert values into employees table
 INSERT INTO employees(emp_id, emp_name, position, salary, branch_id) 
@@ -208,7 +208,7 @@ VALUES
 SELECT * FROM employees;
 ```
 
-### Members Table
+### Members Data
 ```sql
 -- Insert values into members table
 INSERT INTO members(member_id, member_name, member_address, reg_date) 
@@ -228,7 +228,7 @@ VALUES
 SELECT * FROM members;
 ```
 
-### Books Table
+### Books Data
 ```sql
 -- Inserting into books table 
 INSERT INTO books(isbn, book_title, category, rental_price, status, author, publisher) 
@@ -246,7 +246,7 @@ VALUES
 SELECT * FROM books;
 ```
 
-### Issued Status Table
+### Issued Status Data
 ```sql
 -- Inserting into issued_status table
 INSERT INTO issued_status(issued_id, issued_member_id, issued_book_name, issued_date, issued_book_isbn, issued_emp_id) 
@@ -259,7 +259,7 @@ VALUES
 SELECT * FROM issued_status;
 ```
 
-### Return Status Table
+### Return Status Data
 ```sql
 -- Inserting into return_status table
 INSERT INTO return_status(return_id, issued_id, return_date) 

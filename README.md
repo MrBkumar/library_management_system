@@ -10,8 +10,8 @@ To create the database and the associated tables, follow these steps:
 ```sql
 CREATE DATABASE library_management;
 ```
-
-### 1. Branch Table
+### Table Creation
+## 1. Branch Table
 The `branch` table stores information about different library branches, including the branch ID, manager, address, and contact number.
 
 - `branch_id`: Unique identifier for each branch.
@@ -30,7 +30,7 @@ CREATE TABLE branch
 );
 ```
 
-### 2. Employees Table
+## 2. Employees Table
 The `employees` table holds employee information such as employee ID, name, position, salary, and the branch where the employee works.
 
 - `emp_id`: Unique identifier for each employee.
@@ -51,7 +51,7 @@ CREATE TABLE employees
 );
 ```
 
-### 3. Members Table
+## 3. Members Table
 The `members` table contains information about library members, including their ID, name, address, and registration date.
 
 - `member_id`: Unique identifier for each member.
@@ -69,7 +69,7 @@ CREATE TABLE members
 );
 ```
 
-### 4. Books Table
+## 4. Books Table
 The `books` table stores information about books available in the library, including ISBN, title, category, rental price, status, author, and publisher.
 
 - `isbn`: Unique identifier for each book.
@@ -93,7 +93,7 @@ CREATE TABLE books
 );
 ```
 
-### 5. Issued Status Table
+## 5. Issued Status Table
 The `issued_status` table tracks the books issued to members. It stores the issued ID, member ID, book name, issue date, book ISBN, and the employee who processed the issue.
 
 - `issued_id`: Unique identifier for each issued record.
@@ -118,7 +118,7 @@ CREATE TABLE issued_status
 );
 ```
 
-### 6. Return Status Table
+## 6. Return Status Table
 The `return_status` table records the details of returned books, including return ID, issued ID, return book name, return date, and book ISBN.
 
 - `return_id`: Unique identifier for each return record.

@@ -24,7 +24,7 @@
 
 This project involves the creation of a SQL database for a library management system, including essential tables to manage branches, employees, members, books, and book issuing and return processes. Below is an overview of the database schema, instructions for creating the database, and the relationships between the tables.
 
-### Database Creation
+### Database Structure
 
 To create the database and the associated tables, follow these steps:
 

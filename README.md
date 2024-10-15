@@ -1,9 +1,9 @@
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Database Structure](#database-structure)
-   - [Members Table](#members-table)
    - [Branch Table](#branch-table)
    - [Employees Table](#employees-table)
+   - [Members Table](#members-table)
    - [Books Table](#books-table)
    - [Issued Status Table](#issued-status-table)
    - [Return Status Table](#return-status-table)
@@ -14,9 +14,7 @@
    - [Books Data](#books-data)
    - [Issued Status Data](#issued-status-data)
    - [Return Status Data](#return-status-data)
-4. [Query Example](#query-example)
-5. [How to Run](#how-to-run)
-6. [License](#license)
+4. [SQL Queries](#sql-queries)
 
 ---
 ## Introduction
@@ -34,7 +32,7 @@ CREATE DATABASE library_management;
 ```
 
 ### Table Creation
-### 1. Branch Table
+### Branch Table
 The `branch` table stores information about different library branches, including the branch ID, manager, address, and contact number.
 
 - `branch_id`: Unique identifier for each branch.
@@ -52,7 +50,7 @@ CREATE TABLE branch
 );
 ```
 
-### 2. Employees Table
+### Employees Table
 The `employees` table holds employee information such as employee ID, name, position, salary, and the branch where the employee works.
 
 - `emp_id`: Unique identifier for each employee.
@@ -73,7 +71,7 @@ CREATE TABLE employees
 );
 ```
 
-### 3. Members Table
+### Members Table
 The `members` table contains information about library members, including their ID, name, address, and registration date.
 
 - `member_id`: Unique identifier for each member.
@@ -91,7 +89,7 @@ CREATE TABLE members
 );
 ```
 
-### 4. Books Table
+### Books Table
 The `books` table stores information about books available in the library, including ISBN, title, category, rental price, status, author, and publisher.
 
 - `isbn`: Unique identifier for each book.
@@ -115,7 +113,7 @@ CREATE TABLE books
 );
 ```
 
-### 5. Issued Status Table
+### Issued Status Table
 The `issued_status` table tracks the books issued to members. It stores the issued ID, member ID, book name, issue date, book ISBN, and the employee who processed the issue.
 
 - `issued_id`: Unique identifier for each issued record.
@@ -140,7 +138,7 @@ CREATE TABLE issued_status
 );
 ```
 
-### 6. Return Status Table
+### Return Status Table
 The `return_status` table records the details of returned books, including return ID, issued ID, return book name, return date, and book ISBN.
 
 - `return_id`: Unique identifier for each return record.
@@ -178,7 +176,39 @@ SELECT * FROM return_status;
 The database design ensures efficient management of books and tracking of issues and returns, facilitating seamless library operations.
 
 ### Sample Data Insertion
-### 1. Members Table
+### Branch Table
+```sql
+-- Insert values into branch table
+INSERT INTO branch(branch_id, manager_id, branch_address, contact_no) 
+VALUES
+('B001', 'E109', '100 Main St', '+14028887676'),
+('B002', 'E109', '200 Elm Rd', '+14028887677'),
+('B003', 'E109', '300 Cedar Ave', '+14028887678'),
+('B004', 'E110', '400 Pine Blvd', '+14028887679'),
+('B005', 'E110', '500 Oakwood St', '+14028887680');
+SELECT * FROM branch;
+```
+
+### Employees Table
+```sql
+-- Insert values into employees table
+INSERT INTO employees(emp_id, emp_name, position, salary, branch_id) 
+VALUES
+('E101', 'John Doe', 'Clerk', 60000.00, 'B001'),
+('E102', 'Jane Taylor', 'Clerk', 45000.00, 'B002'),
+('E103', 'Michael Harris', 'Librarian', 55000.00, 'B001'),
+('E104', 'Emily Johnson', 'Assistant', 40000.00, 'B001'),
+('E105', 'Sarah Parker', 'Assistant', 42000.00, 'B001'),
+('E106', 'Linda Evans', 'Assistant', 43000.00, 'B001'),
+('E107', 'David Walker', 'Clerk', 62000.00, 'B005'),
+('E108', 'Laura Hall', 'Clerk', 46000.00, 'B004'),
+('E109', 'Daniel King', 'Manager', 57000.00, 'B003'),
+('E110', 'Anna Brooks', 'Manager', 41000.00, 'B005'),
+('E111', 'Christopher Wright', 'Assistant', 65000.00, 'B005');
+SELECT * FROM employees;
+```
+
+### Members Table
 ```sql
 -- Insert values into members table
 INSERT INTO members(member_id, member_name, member_address, reg_date) 
@@ -198,39 +228,7 @@ VALUES
 SELECT * FROM members;
 ```
 
-### 2. Branch Table
-```sql
--- Insert values into branch table
-INSERT INTO branch(branch_id, manager_id, branch_address, contact_no) 
-VALUES
-('B001', 'E109', '100 Main St', '+14028887676'),
-('B002', 'E109', '200 Elm Rd', '+14028887677'),
-('B003', 'E109', '300 Cedar Ave', '+14028887678'),
-('B004', 'E110', '400 Pine Blvd', '+14028887679'),
-('B005', 'E110', '500 Oakwood St', '+14028887680');
-SELECT * FROM branch;
-```
-
-### 3. Employees Table
-```sql
--- Insert values into employees table
-INSERT INTO employees(emp_id, emp_name, position, salary, branch_id) 
-VALUES
-('E101', 'John Doe', 'Clerk', 60000.00, 'B001'),
-('E102', 'Jane Taylor', 'Clerk', 45000.00, 'B002'),
-('E103', 'Michael Harris', 'Librarian', 55000.00, 'B001'),
-('E104', 'Emily Johnson', 'Assistant', 40000.00, 'B001'),
-('E105', 'Sarah Parker', 'Assistant', 42000.00, 'B001'),
-('E106', 'Linda Evans', 'Assistant', 43000.00, 'B001'),
-('E107', 'David Walker', 'Clerk', 62000.00, 'B005'),
-('E108', 'Laura Hall', 'Clerk', 46000.00, 'B004'),
-('E109', 'Daniel King', 'Manager', 57000.00, 'B003'),
-('E110', 'Anna Brooks', 'Manager', 41000.00, 'B005'),
-('E111', 'Christopher Wright', 'Assistant', 65000.00, 'B005');
-SELECT * FROM employees;
-```
-
-### 4. Books Table
+### Books Table
 ```sql
 -- Inserting into books table 
 INSERT INTO books(isbn, book_title, category, rental_price, status, author, publisher) 
@@ -248,7 +246,7 @@ VALUES
 SELECT * FROM books;
 ```
 
-### 5. Issued Status Table
+### Issued Status Table
 ```sql
 -- Inserting into issued_status table
 INSERT INTO issued_status(issued_id, issued_member_id, issued_book_name, issued_date, issued_book_isbn, issued_emp_id) 
@@ -261,7 +259,7 @@ VALUES
 SELECT * FROM issued_status;
 ```
 
-### 6. Return Status Table
+### Return Status Table
 ```sql
 -- Inserting into return_status table
 INSERT INTO return_status(return_id, issued_id, return_date) 

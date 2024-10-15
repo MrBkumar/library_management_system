@@ -161,6 +161,20 @@ CREATE TABLE return_status
 );
 ```
 
+###Extra
+```sql
+-- Adding new column in return_status
+
+ALTER TABLE return_status
+ADD Column book_quality VARCHAR(15) DEFAULT('Good');
+
+UPDATE return_status
+SET book_quality = 'Damaged'
+WHERE issued_id 
+    IN ('IS112', 'IS117', 'IS118');
+SELECT * FROM return_status;
+```
+
 The database design ensures efficient management of books and tracking of issues and returns, facilitating seamless library operations.
 
 ### Sample Data Insertion
@@ -258,4 +272,10 @@ VALUES
 ('RS104', 'IS109', '2024-04-16'),
 ('RS105', 'IS110', '2024-04-18');
 SELECT * FROM return_status;
+```
+
+### SQL Queries
+### 1. List all employees working in the library.
+```sql
+SELECT * FROM employees;
 ```

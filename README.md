@@ -277,3 +277,323 @@ SELECT * FROM return_status;
 ```sql
 SELECT * FROM employees;
 ```
+
+### 2. Find all members who registered after January 1, 2023.
+```sql
+SELECT * FROM members
+WHERE reg_date > '2021-01-01';
+```
+
+### 3. Display the titles of all books along with their rental price.
+```sql
+SELECT
+book_title, rental_price
+FROM books;
+```
+
+### 4. Find all branches that have the word "Main" in their address.
+```sql
+SELECT
+*
+FROM branch
+WHERE branch_address ILIKE '%Main%';
+```
+
+### 5. Get the contact number of a branch where the branch ID is 'B001'.
+```sql
+SELECT
+branch_id, contact_no
+FROM branch
+WHERE branch_id = 'B001';
+```
+
+### 6. List the names of all employees along with their branch address.
+```sql
+SELECT e.emp_name, b.branch_address 
+FROM employees e 
+JOIN branch b ON e.branch_id = b.branch_id;
+```
+
+### 7. Get the total number of books issued by each employee.
+```sql
+SELECT
+issued_emp_id,
+COUNT(*) as total_issued
+FROM issued_status
+GROUP BY 1;
+```
+
+### 8. List all employees whose salary is greater than 3000.
+```sql
+SELECT
+*
+FROM employees
+WHERE salary > 45000;
+```
+
+### 8. List all employees whose salary is greater than average salary.
+```sql
+SELECT
+*
+FROM booksemployees
+WHERE salary > ROUND((
+	SELECT
+	AVG(salary)
+	FROM employees), 2);
+```
+
+### 9. Find the total number of books in each category.
+```sql
+SELECT
+category, COUNT(*) AS total_books
+FROM books
+GROUP BY 1
+ORDER BY 2 DESC;
+```
+
+### 10. Get the details of the employee who issued a book with ISBN '978-0-525-47535-5'.
+```sql
+SELECT
+e.*
+FROM issued_status i
+INNER JOIN employees e ON  i.issued_emp_id = e.emp_id
+WHERE i.issued_book_isbn = '978-0-525-47535-5';
+```
+
+### 11. Find all books that are not currently available (status = 'issued').
+```sql
+SELECT
+*
+FROM books
+WHERE status ILIKE '%No%';
+```
+
+### 12. Find all members who have borrowed books by author "J.K. Rowling".
+```sql
+SELECT
+m.member_name
+FROM issued_status i
+INNER JOIN members m ON m.member_id = i.issued_member_id
+INNER JOIN books b ON i.issued_book_isbn = b.isbn
+WHERE b.author ILIKE '%J.K. Rowling%';
+```
+
+### 13. List all books along with their issue and return status.
+```sql
+SELECT
+b.book_title, b.status, i.issued_date, r.return_date
+FROM books b
+INNER JOIN issued_status i ON b.isbn = i.issued_book_isbn
+INNER JOIN return_status r ON i.issued_id = r.issued_id;
+```
+
+### 14. Find the employees who have issued more than 5 books.
+```sql
+SELECT
+issued_emp_id, COUNT(*) AS issued_count
+FROM issued_status
+GROUP BY 1
+HAVING COUNT(*) > 5
+```
+
+### 15. Find the employee details who have issued more than 5 books.
+```sql
+SELECT
+*
+FROM employees
+WHERE emp_id IN (SELECT
+issued_emp_id
+FROM issued_status
+GROUP BY 1
+HAVING COUNT(*) > 5);
+```
+
+### 16. List the top 3 employees who have issued the most books.
+```sql
+SELECT
+issued_emp_id, COUNT(*) AS issued_count
+FROM issued_status
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 3;
+```
+
+### 17. Get the member name, book title, and return date for all returned books.
+```sql
+SELECT
+m.member_name, b.book_title, r.return_date
+FROM members m
+INNER JOIN issued_status i ON m.member_id = i.issued_member_id
+INNER JOIN books b ON i.issued_book_isbn = b.isbn
+INNER JOIN return_status r ON i.issued_id = r.issued_id;
+```
+
+### 18. Display all employees who work at branches managed by an employee with ID 'E001'.
+```sql
+SELECT
+*
+FROM employees e
+INNER JOIN branch b ON e.branch_id = b.branch_id
+WHERE b.manager_id ILIKE '%E109%';
+```
+
+### 19. Find all employees who work at a branch that has issued at least 10 books.
+```sql
+SELECT
+e.emp_name
+FROM employees e
+INNER JOIN issued_status i ON e.emp_id = i.issued_emp_id
+GROUP BY e.emp_name, e.branch_id
+HAVING COUNT(i.issued_book_isbn) >= 5;
+```
+
+### 20. Find the total rental price of all books issued by each branch
+```sql
+SELECT
+br.branch_id, SUM(bo.rental_price) AS total_rental_price
+FROM branch br
+INNER JOIN employees e ON br.branch_id = e.branch_id
+INNER JOIN issued_status i ON i.issued_emp_id = e.emp_id
+INNER JOIN books bo ON i.issued_book_isbn = bo.isbn
+GROUP BY br.branch_id;
+```
+
+### 21. Get the branch name and the number of employees working at each branch.
+```sql
+SELECT
+br.branch_address, COUNT(e.emp_id) AS no_emp_working
+FROM branch br
+INNER JOIN employees e ON e.branch_id = br.branch_id
+GROUP BY 1
+ORDER BY 2 DESC;
+```
+
+### 22. List all books that have never been issued.
+```sql
+SELECT
+*
+FROM books bo
+WHERE NOT EXISTS (
+SELECT 1 FROM issued_status i WHERE i.issued_book_isbn = bo.isbn
+)
+```
+
+### 23. Find the top 3 branches with the most books issued, but only consider books issued in the last 6 months. List the branch details, total books issued, and the names of the top issuing employees at each branch.
+```sql
+WITH RecentIssues AS (
+	SELECT
+	i.issued_emp_id, br.branch_id, COUNT(i.issued_id) AS total_issued_books
+	FROM issued_status i
+	JOIN employees e ON i.issued_emp_id = e.emp_id
+	JOIN branch br ON e.branch_id = br.branch_id
+	WHERE i.issued_date >= CURRENT_DATE - INTERVAL '6 months'
+	GROUP BY i.issued_emp_id, br.branch_id
+)
+SELECT
+br.branch_address, e.emp_name, ri.total_issued_books
+FROM branch br
+JOIN RecentIssues ri ON br.branch_id = ri.branch_id
+JOIN employees e ON ri.issued_emp_id = e.emp_id
+ORDER BY ri.total_issued_books
+LIMIT 3;
+```
+
+### 24. Find the member who has rented the most expensive books (by total rental cost) in the last year. Display their total rental expenditure, number of books rented, and the details of the most expensive book they rented.
+```sql
+WITH MemberExpenditure AS (
+    SELECT m.member_id, m.member_name, SUM(b.rental_price) AS total_spent, COUNT(b.isbn) AS total_books, MAX(b.rental_price) AS max_price
+    FROM members m
+    JOIN issued_status i ON m.member_id = i.issued_member_id
+    JOIN books b ON i.issued_book_isbn = b.isbn
+    WHERE i.issued_date >= CURRENT_DATE - INTERVAL '1 year'
+    GROUP BY m.member_id, m.member_name
+)
+SELECT me.member_id, me.member_name, me.total_spent, me.total_books, b.book_title, b.rental_price
+FROM MemberExpenditure me
+JOIN books b ON b.rental_price = me.max_price
+ORDER BY me.total_spent DESC
+LIMIT 1;
+```
+
+### 25. List all books that have been issued more than twice but have never been returned.
+```sql
+SELECT
+b.book_title, b.isbn, COUNT(i.issued_id) AS issue_count
+FROM books b
+JOIN issued_status i ON b.isbn = i.issued_book_isbn
+LEFT JOIN return_status r ON i.issued_id = r.issued_id
+WHERE r.issued_id IS NULL
+GROUP BY 1, 2
+HAVING COUNT(i.issued_id) > 2;
+```
+
+### 26.Find the employee who has issued the highest number of unique books across multiple branches and calculate the total number of unique books issued.
+```sql
+WITH EmployeeBookCount AS (
+	SELECT
+	issued_emp_id, COUNT(DISTINCT issued_book_isbn) AS unique_book
+	FROM issued_status
+	GROUP BY 1
+)
+SELECT
+e.emp_name, ebc.unique_book
+FROM EmployeeBookCount ebc
+JOIN employees e ON e.emp_id = ebc.issued_emp_id
+ORDER BY 2 DESC
+LIMIT 1;
+```
+
+### 27. Find the total revenue generated by all book rentals, but only include books that were rented and returned within the same month.
+```sql
+SELECT SUM(b.rental_price) AS total_revenue
+FROM books b
+JOIN issued_status i ON b.isbn = i.issued_book_isbn
+JOIN return_status r ON i.issued_id = r.issued_id
+WHERE DATE_PART('month', i.issued_date) = DATE_PART('month', r.return_date)
+AND DATE_PART('year', i.issued_date) = DATE_PART('year', r.return_date);
+```
+
+### 28. Calculate the total revenue generated by each employee from books they issued, and compare it to the average revenue generated by employees across all branches. List only employees whose revenue exceeds the average.
+```sql
+WITH EmployeeRevenue AS (
+    SELECT i.issued_emp_id, SUM(b.rental_price) AS total_revenue
+    FROM issued_status i
+    JOIN books b ON i.issued_book_isbn = b.isbn
+    GROUP BY i.issued_emp_id
+),
+GlobalAvgRevenue AS (
+    SELECT AVG(er.total_revenue) AS avg_revenue
+    FROM EmployeeRevenue er
+)
+SELECT e.emp_name, er.total_revenue
+FROM EmployeeRevenue er
+JOIN employees e ON er.issued_emp_id = e.emp_id
+CROSS JOIN GlobalAvgRevenue gar
+WHERE er.total_revenue > gar.avg_revenue;
+```
+
+### 29. Get a list of members who have never issued any books.
+```sql
+SELECT
+    m.member_id,
+    m.member_name
+FROM
+    members m
+LEFT JOIN
+    issued_status i ON m.member_id = i.issued_member_id
+WHERE
+    i.issued_id IS NULL;
+```
+
+### 30. Update the salary of all employees who have issued more than 5 books, giving them a 5% raise.
+```sql
+UPDATE employees
+SET salary = salary * 0.95
+WHERE emp_id IN (
+    SELECT issued_emp_id
+    FROM issued_status
+    GROUP BY issued_emp_id
+    HAVING COUNT(issued_id) > 5
+);
+SELECT * FROM EMPLOYEES;
+```
